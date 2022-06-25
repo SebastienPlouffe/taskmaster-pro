@@ -38,6 +38,8 @@ var createTask = function(taskText, taskDate, taskList) {
   $("#list-" + taskList).append(taskLi);
 };
 
+
+
 var loadTasks = function() {
   tasks = JSON.parse(localStorage.getItem("tasks"));
 
@@ -191,18 +193,22 @@ $(".card .list-group").sortable({
   scroll: false,
   tolerance: "pointer",
   helper: "clone",
-  // activate: function(event) {
-  //   console.log("activate", this);
-  // },
-  // deactivate: function(event) {
-  //   console.log("deactivate", this);
-  // },
-  // over: function(event) {
-  //   console.log("over", event.target);
-  // },
-  // out: function(event) {
-  //   console.log("out", event.target);
-  // },
+  activate: function(event) {
+    $(this).addClass("dropover")
+    $(".bottom-trash").addClass("bottom-trash-drag")
+  },
+  deactivate: function(event) {
+    $(this).removeClass("dropover")
+    $(".bottom-trash").removeClass("bottom-trash-drag")
+  },
+  over: function(event) {
+    $(this).addClass("dropover-active")
+    $(".bottom-trash").addClass("bottom-trash-active")
+  },
+  out: function(event) {
+    $(this).removeClass("dropover-active")
+    $(".bottom-trash").removeClass("bottom-trash-active")
+  },
   update: function(event) {
     var tempArr = [];
 
@@ -245,6 +251,8 @@ $("#trash").droppable({
     ui.draggable.remove();
     console.log("drop");
   },
+
+
 });
 
 $("#modalDueDate").datepicker({
@@ -252,4 +260,8 @@ $("#modalDueDate").datepicker({
 })
 
 
-
+setInterval(function () {
+  $(".card .list-group-item").each(function(index, el) {
+    auditTask(el);
+  });
+}, 1800000);
